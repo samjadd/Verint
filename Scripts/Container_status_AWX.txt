@@ -1,0 +1,7 @@
+[root@ip-172-31-59-55 ec2-user]# docker ps
+CONTAINER ID        IMAGE                        COMMAND                  CREATED             STATUS              PORTS                                                 NAMES
+db5ff5d19663        ansible/awx_task:9.1.1       "/tini -- /bin/sh -c…"   8 hours ago         Up 8 hours          8052/tcp                                              awx_task
+8568ffa53d8c        ansible/awx_web:9.1.1        "/tini -- /bin/sh -c…"   8 hours ago         Up 8 hours          0.0.0.0:80->8052/tcp                                  awx_web
+64e55aeedada        memcached:alpine             "docker-entrypoint.s…"   8 hours ago         Up 8 hours          11211/tcp                                             awx_memcached
+a4b7b9e71063        ansible/awx_rabbitmq:3.7.4   "docker-entrypoint.s…"   8 hours ago         Up 8 hours          4369/tcp, 5671-5672/tcp, 15671-15672/tcp, 25672/tcp   awx_rabbitmq
+02cfd7b19349        postgres:10                  "docker-entrypoint.s…"   8 hours ago         Up 8 hours          5432/tcp                                              awx_postgres

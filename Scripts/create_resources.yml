@@ -1,0 +1,53 @@
+---
+
+- hosts: localhost
+  vars:
+    state: present
+    password: Test1234
+    username: postgres_admin
+
+  tasks:
+  - name: Create Free Tier Amazon Bucket
+    s3_bucket:
+      name: mys3bucket-awx
+      state: "{{ state }}"
+
+  - name: Create Free Tier Amazon RDS PostgreSQL
+    rds_instance:
+      engine: postgres
+      state: "{{ state }}"
+      allocated_storage: 10
+      db_instance_identifier: ansible-test-postgres-db-instance
+      instance_type: db.t3.micro
+      password: "{{ password }}"
+      username: "{{ username }}"
+      skip_final_snapshot: yes
+  - name: Create Dynamo DB table
+    dynamodb_table:
+      name: Music
+      region: 'us-east-1'
+      state: "{{ state }}"
+      hash_key_name: Artist
+      hash_key_type: STRING
+      range_key_name: SongTitle
+      range_key_type: STRING
+      # indexes:
+      #   - name: NamedIndex
+      #     type: global_include
+      #     hash_key_name: AlbumTitle
+      #     hash_key_type: STRING
+      #     range_key_name: Year
+      #     range_key_type: NUMBER
+      read_capacity: 2
+      write_capacity: 2
+      tags:
+        Name: Test_DB
+  - name: create lambda in AWS
+    lambda:
+      name: "Ping"
+      state: "{{ state }}"
+      zip_file: ping.zip
+      runtime: 'python3.7'
+      role: 'arn:aws:iam::188861551899:role/Lambda-execution'
+      handler: 'ping.lambda_handler'
+      timeout: 350
